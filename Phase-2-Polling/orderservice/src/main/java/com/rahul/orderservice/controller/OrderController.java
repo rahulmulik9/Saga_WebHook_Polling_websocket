@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 import org.springframework.web.context.request.async.DeferredResult;
 
 
@@ -47,9 +48,12 @@ public class OrderController {
         OrderResponse response = orderService.getOrderById(id);
 
         DeferredResult<OrderResponse> deferredResult = new DeferredResult<>(LONG_POLL_TIMEOUT_MS, response);
-        // ^ if nothing completes it within 10s, Spring auto-completes it
-        //   with this same "response" (current status at request time) as the fallback
-
+        /*When user calls this API:
+             It checks the order status. If it is PENDING, it says: "Wait, I'll keep your request for up to 10 seconds."
+             It stores that waiting request in the OrderStatusWaiters map.
+             If the order becomes COMPLETED/FAILED, it immediately sends that status.
+             (This is done in listener, where notify method is used to change the status )
+             If nothing happens in 10 seconds, it sends PENDING.*/
         if (response.getStatus() != OrderStatus.PENDING) {
             deferredResult.setResult(response);
         } else {
