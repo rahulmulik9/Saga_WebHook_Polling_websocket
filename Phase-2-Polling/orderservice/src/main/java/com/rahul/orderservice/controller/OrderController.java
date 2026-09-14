@@ -20,6 +20,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
+    private static final long LONG_POLL_TIMEOUT_MS = 10_000;
 
     private final OrderService orderService;
     private final OrderStatusWaiters orderStatusWaiters;
@@ -45,13 +46,13 @@ public class OrderController {
     public DeferredResult<OrderResponse> pollLongOrderStatus(@PathVariable Long id) {
         OrderResponse response = orderService.getOrderById(id);
 
-        DeferredResult<OrderResponse> deferredResult = new DeferredResult<>();
+        DeferredResult<OrderResponse> deferredResult = new DeferredResult<>(LONG_POLL_TIMEOUT_MS, response);
+        // ^ if nothing completes it within 10s, Spring auto-completes it
+        //   with this same "response" (current status at request time) as the fallback
 
         if (response.getStatus() != OrderStatus.PENDING) {
-            // already resolved - respond immediately, nothing to wait for
             deferredResult.setResult(response);
         } else {
-            // still pending - hold the request open, a listener will complete it later
             orderStatusWaiters.register(id, deferredResult);
         }
 
