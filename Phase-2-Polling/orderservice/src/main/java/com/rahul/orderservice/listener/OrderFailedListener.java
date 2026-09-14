@@ -1,5 +1,6 @@
 package com.rahul.orderservice.listener;
 
+import com.rahul.orderservice.dto.OrderResponse;
 import com.rahul.orderservice.dto.sagaDto.KafkaTopics;
 import com.rahul.orderservice.dto.sagaDto.OrderFailedCommand;
 import com.rahul.orderservice.entity.Order;
@@ -7,6 +8,7 @@ import com.rahul.orderservice.entity.OrderStatus;
 import com.rahul.orderservice.entity.ProcessedEvent;
 import com.rahul.orderservice.repository.OrderRepository;
 import com.rahul.orderservice.repository.ProcessedEventRepository;
+import com.rahul.orderservice.service.OrderStatusWaiters;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -24,6 +26,7 @@ public class OrderFailedListener {
 
     private final OrderRepository orderRepository;
     private final ProcessedEventRepository processedEventRepository;
+    private final OrderStatusWaiters orderStatusWaiters;
 
     @KafkaListener(topics = KafkaTopics.ORDER_FAILED, containerFactory = "orderFailedContainerFactory")
     @Transactional
@@ -41,6 +44,10 @@ public class OrderFailedListener {
 
         order.setStatus(OrderStatus.FAILED);
         orderRepository.save(order);
+        orderStatusWaiters.notifyStatusChanged(
+                order.getId(),
+                new OrderResponse(order.getId(), order.getStatus(), order.getCreatedAt()));
+
         processedEventRepository.save(new ProcessedEvent(null, command.getOrderId(), EVENT_TYPE, LocalDateTime.now()));
 
         log.info("Order {} marked FAILED, reason={}", command.getOrderId(), command.getReason());
