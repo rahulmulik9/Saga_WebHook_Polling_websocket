@@ -4,10 +4,10 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/Phase-1-Saga_orchestration/orderservice/pom.xml" />
-        <option value="$PROJECT_DIR$/Phase-1-Saga_orchestration/paymentservice/pom.xml" />
-        <option value="$PROJECT_DIR$/Phase-1-Saga_orchestration/inventoryservice/pom.xml" />
-        <option value="$PROJECT_DIR$/Phase-1-Saga_orchestration/sagaorchestratorservice/pom.xml" />
+        <option value="$PROJECT_DIR$/Phase-2-Polling/inventoryservice/pom.xml" />
+        <option value="$PROJECT_DIR$/Phase-2-Polling/orderservice/pom.xml" />
+        <option value="$PROJECT_DIR$/Phase-2-Polling/paymentservice/pom.xml" />
+        <option value="$PROJECT_DIR$/Phase-2-Polling/sagaorchestratorservice/pom.xml" />
       </list>
     </option>
   </component>
