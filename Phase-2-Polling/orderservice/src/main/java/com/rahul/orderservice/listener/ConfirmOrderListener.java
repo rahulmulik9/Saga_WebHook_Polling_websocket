@@ -4,6 +4,7 @@ package com.rahul.orderservice.listener;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rahul.orderservice.dto.OrderResponse;
 import com.rahul.orderservice.dto.sagaDto.ConfirmOrderCommand;
 import com.rahul.orderservice.dto.sagaDto.KafkaTopics;
 import com.rahul.orderservice.entity.Order;
@@ -13,6 +14,7 @@ import com.rahul.orderservice.entity.ProcessedEvent;
 import com.rahul.orderservice.repository.OrderRepository;
 import com.rahul.orderservice.repository.OutboxEventRepository;
 import com.rahul.orderservice.repository.ProcessedEventRepository;
+import com.rahul.orderservice.service.OrderStatusWaiters;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -32,6 +34,7 @@ public class ConfirmOrderListener {
     private final ProcessedEventRepository processedEventRepository;
     private final OutboxEventRepository outboxEventRepository;
     private final ObjectMapper objectMapper;
+    private final OrderStatusWaiters orderStatusWaiters;
 
     @KafkaListener(topics = KafkaTopics.ORDER_CONFIRM, containerFactory = "confirmOrderContainerFactory")
     @Transactional
@@ -49,6 +52,9 @@ public class ConfirmOrderListener {
 
         order.setStatus(OrderStatus.COMPLETED);
         orderRepository.save(order);
+        orderStatusWaiters.notifyStatusChanged(
+                order.getId(),
+                new OrderResponse(order.getId(), order.getStatus(), order.getCreatedAt()));
         processedEventRepository.save(new ProcessedEvent(null, command.getOrderId(), EVENT_TYPE, LocalDateTime.now()));
 
         log.info("Order {} marked COMPLETED", command.getOrderId());

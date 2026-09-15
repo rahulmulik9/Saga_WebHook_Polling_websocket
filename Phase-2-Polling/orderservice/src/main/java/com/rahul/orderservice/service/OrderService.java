@@ -1,5 +1,6 @@
 package com.rahul.orderservice.service;
 
+import com.rahul.orderservice.dto.OrderResponse;
 import com.rahul.orderservice.dto.PlaceOrderRequest;
 import com.rahul.orderservice.dto.sagaDto.KafkaTopics;
 import com.rahul.orderservice.dto.sagaDto.OrderCreated;
@@ -24,9 +25,11 @@ public class OrderService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final OrderRepository orderRepository;
 
-    public Order getOrderById(Long id) {
-        return orderRepository.findById(id)
+    public OrderResponse getOrderById(Long id) {
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Order not found with id: " + id));
+
+        return new OrderResponse(order.getId(), order.getStatus(), order.getCreatedAt());
     }
 
     public List<Order> getAllOrders() {
