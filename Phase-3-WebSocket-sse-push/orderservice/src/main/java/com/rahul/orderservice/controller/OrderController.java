@@ -5,6 +5,7 @@ import com.rahul.orderservice.dto.PlaceOrderRequest;
 import com.rahul.orderservice.entity.Order;
 import com.rahul.orderservice.entity.OrderStatus;
 import com.rahul.orderservice.service.OrderService;
+import com.rahul.orderservice.service.OrderStatusEmitters;
 import com.rahul.orderservice.service.OrderStatusWaiters;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 
 @RestController
@@ -25,6 +27,7 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrderStatusWaiters orderStatusWaiters;
+    private final OrderStatusEmitters orderStatusEmitters;
 
     @PostMapping("/place")
     public ResponseEntity<Order> placeOrder(@Valid @RequestBody PlaceOrderRequest request) {
@@ -61,5 +64,27 @@ public class OrderController {
         }
 
         return deferredResult;
+    }
+
+    @GetMapping("/{id}/stream")
+    public SseEmitter streamOrderStatus(@PathVariable Long id) {
+        OrderResponse response = orderService.getOrderById(id);
+
+        SseEmitter emitter = new SseEmitter();
+
+        if (response.getStatus() != OrderStatus.PENDING) {
+            // already resolved - send immediately, nothing to wait for
+            try {
+                emitter.send(response);
+                emitter.complete();
+            } catch (Exception e) {
+                emitter.completeWithError(e);
+            }
+        } else {
+            // still pending - hold the stream open, a listener will push later
+            orderStatusEmitters.register(id, emitter);
+        }
+
+        return emitter;
     }
 }
