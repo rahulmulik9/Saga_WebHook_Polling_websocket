@@ -9,5 +9,9 @@
     <file url="file://$PROJECT_DIR$/Phase-2-Polling/orderservice/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Phase-2-Polling/paymentservice/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Phase-2-Polling/sagaorchestratorservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Phase-3-WebSocket-sse-push/inventoryservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Phase-3-WebSocket-sse-push/orderservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Phase-3-WebSocket-sse-push/paymentservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Phase-3-WebSocket-sse-push/sagaorchestratorservice/src/main/java" charset="UTF-8" />
   </component>
 </project>
