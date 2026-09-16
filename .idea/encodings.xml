@@ -17,5 +17,10 @@
     <file url="file://$PROJECT_DIR$/Phase-4-Webhook-callback/orderservice/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Phase-4-Webhook-callback/paymentservice/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Phase-4-Webhook-callback/sagaorchestratorservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Phase-5-notification-consumer/inventoryservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Phase-5-notification-consumer/notification-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Phase-5-notification-consumer/orderservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Phase-5-notification-consumer/paymentservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Phase-5-notification-consumer/sagaorchestratorservice/src/main/java" charset="UTF-8" />
   </component>
 </project>

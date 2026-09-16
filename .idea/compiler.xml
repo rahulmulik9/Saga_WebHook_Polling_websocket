@@ -9,14 +9,16 @@
         <outputRelativeToContentRoot value="true" />
         <module name="inventoryservice" />
         <module name="paymentservice" />
-        <module name="orderservice" />
+        <module name="notification-service" />
         <module name="sagaorchestratorservice" />
+        <module name="orderservice" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="inventoryservice" options="-parameters" />
+      <module name="notification-service" options="-parameters" />
       <module name="orderservice" options="-parameters" />
       <module name="paymentservice" options="-parameters" />
       <module name="sagaorchestratorservice" options="-parameters" />
