@@ -35,6 +35,9 @@ public class Order {
 
     private LocalDateTime createdAt;
 
+    // optional - if null, no callback is attempted when the saga resolves
+    private String callbackUrl;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 }

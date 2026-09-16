@@ -36,64 +36,6 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-    /// older feign client code
-//    @Transactional
-//    public Order placeOrder(PlaceOrderRequest request) {
-//        Order order = new Order();
-//        order.setStatus(OrderStatus.PENDING);
-//        order.setCreatedAt(LocalDateTime.now());
-//
-//        // PHASE 1: Validate every item BEFORE deducting anything.
-//        // Prevents a mid-loop failure from leaving earlier items' stock
-//        // already deducted with nothing to roll it back.
-//        for (OrderItemRequest line : request.getItems()) {
-//            ProductResponse product;
-//            try {
-//                product = inventoryClient.getProduct(line.getProductId());
-//            } catch (FeignException.NotFound ex) {
-//                throw new NoSuchElementException("Product not found with id: " + line.getProductId());
-//            }
-//
-//            if (product.getQuantity() < line.getQuantity()) {
-//                throw new InsufficientStockException(
-//                        "Insufficient stock for product id " + line.getProductId()
-//                                + ": requested " + line.getQuantity() + ", available " + product.getQuantity());
-//            }
-//        }
-//
-//        BigDecimal total = BigDecimal.ZERO;
-//
-//        // PHASE 2: All items validated - now safe to actually deduct.
-//        for (OrderItemRequest line : request.getItems()) {
-//            ProductResponse product = inventoryClient.deductStock(
-//                    line.getProductId(),
-//                    new DeductStockRequest(line.getQuantity()));
-//
-//            OrderItem item = new OrderItem();
-//            item.setProductId(product.getId());
-//            item.setQuantity(line.getQuantity());
-//            item.setPrice(product.getPrice());
-//            item.setOrder(order);
-//            order.getItems().add(item);
-//
-//            total = total.add(product.getPrice().multiply(BigDecimal.valueOf(line.getQuantity())));
-//        }
-//
-//        // Persist as PENDING first so we have a real orderId for payment-service
-//        Order savedOrder = orderRepository.save(order);
-//
-//        // Charge payment via payment-service
-//        PaymentResponse payment = paymentClient.makePayment(new PaymentRequest(savedOrder.getId(), total));
-//        if (!"SUCCESS".equals(payment.getStatus())) {
-//            savedOrder.setStatus(OrderStatus.FAILED);
-//            orderRepository.save(savedOrder);
-//            throw new PaymentFailedException("Payment failed for amount: " + total);
-//        }
-//
-//        savedOrder.setStatus(OrderStatus.COMPLETED);
-//        return orderRepository.save(savedOrder);
-//    }
-
 
     // No stock check, no payment call here anymore - orderservice no longer
     // decides the order's outcome. It just records intent as PENDING and
@@ -103,6 +45,7 @@ public class OrderService {
         Order order = new Order();
         order.setStatus(OrderStatus.PENDING);
         order.setCreatedAt(LocalDateTime.now());
+        order.setCallbackUrl(request.getCallbackUrl());
 
         request.getItems().forEach(line -> {
             OrderItem item = new OrderItem();

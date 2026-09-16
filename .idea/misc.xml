@@ -8,10 +8,10 @@
         <option value="$PROJECT_DIR$/Phase-3-WebSocket/orderservice/pom.xml" />
         <option value="$PROJECT_DIR$/Phase-3-WebSocket/paymentservice/pom.xml" />
         <option value="$PROJECT_DIR$/Phase-3-WebSocket/sagaorchestratorservice/pom.xml" />
-        <option value="$PROJECT_DIR$/Phase-3-WebSocket-sse-push/inventoryservice/pom.xml" />
-        <option value="$PROJECT_DIR$/Phase-3-WebSocket-sse-push/orderservice/pom.xml" />
-        <option value="$PROJECT_DIR$/Phase-3-WebSocket-sse-push/paymentservice/pom.xml" />
-        <option value="$PROJECT_DIR$/Phase-3-WebSocket-sse-push/sagaorchestratorservice/pom.xml" />
+        <option value="$PROJECT_DIR$/Phase-4-Webhook-callback/inventoryservice/pom.xml" />
+        <option value="$PROJECT_DIR$/Phase-4-Webhook-callback/orderservice/pom.xml" />
+        <option value="$PROJECT_DIR$/Phase-4-Webhook-callback/paymentservice/pom.xml" />
+        <option value="$PROJECT_DIR$/Phase-4-Webhook-callback/sagaorchestratorservice/pom.xml" />
       </list>
     </option>
   </component>

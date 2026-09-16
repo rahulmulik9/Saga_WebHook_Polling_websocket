@@ -18,4 +18,7 @@ public class PlaceOrderRequest {
     @NotEmpty(message = "items must not be empty")
     @Valid
     private List<OrderItemRequest> items;
+
+    // optional - if the client doesn't supply this, no callback is attempted
+    private String callbackUrl;
 }
