@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
+    //timeout
     private static final long LONG_POLL_TIMEOUT_MS = 10_000;
 
     private final OrderService orderService;
