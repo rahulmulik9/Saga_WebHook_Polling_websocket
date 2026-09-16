@@ -11,7 +11,6 @@ import com.rahul.orderservice.entity.ProcessedEvent;
 import com.rahul.orderservice.repository.OrderRepository;
 import com.rahul.orderservice.repository.ProcessedEventRepository;
 import com.rahul.orderservice.service.OrderCallbackService;
-import com.rahul.orderservice.service.OrderStatusEmitters;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -29,7 +28,6 @@ public class ConfirmOrderListener {
 
     private final OrderRepository orderRepository;
     private final ProcessedEventRepository processedEventRepository;
-    private final OrderStatusEmitters orderStatusEmitters;
     private final OrderCallbackService orderCallbackService;
 
     @KafkaListener(topics = KafkaTopics.ORDER_CONFIRM, containerFactory = "confirmOrderContainerFactory")
@@ -48,10 +46,6 @@ public class ConfirmOrderListener {
 
         order.setStatus(OrderStatus.COMPLETED);
         orderRepository.save(order);
-        //sse
-        orderStatusEmitters.pushStatusChanged(
-                order.getId(),
-                new OrderResponse(order.getId(), order.getStatus(), order.getCreatedAt()));
 
         orderCallbackService.notifyCallback(order.getCallbackUrl(),
                 new OrderResponse(order.getId(), order.getStatus(), order.getCreatedAt()));
